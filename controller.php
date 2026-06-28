@@ -1,4 +1,11 @@
 <?php
+namespace App\Controller;
+
+use function App\Service\serviceCreerWallet;
+use function App\Service\serviceDepot;
+use function App\Service\serviceRetrait;
+use function App\Repository\getAllTransactions;
+
 function handleCreerWallet() {
     echo "--- Creation Wallet ---\n";
     echo "Telephone : ";
@@ -48,8 +55,10 @@ function handleListerTransactions() {
         return;
     }
 
-    for ($i = 0; $i < count($transactions); $i++) {
-        $t = $transactions[$i];
-        echo "ID: {$t['id']} | {$t['date']} | {$t['type']} | Tel: {$t['telephone']} | Montant: {$t['montant']} CFA | Frais: {$t['frais']} CFA\n";
-    }
+    $lignes = array_map(
+        fn($t) => "ID: {$t['id']} | {$t['date']} | {$t['type']} | Tel: {$t['telephone']} | Montant: {$t['montant']} CFA | Frais: {$t['frais']} CFA",
+        $transactions
+    );
+    
+    echo implode("\n", $lignes) . "\n";
 }

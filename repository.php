@@ -1,4 +1,6 @@
 <?php
+namespace App\Repository;
+
 $wallets = [];       
 $transactions = [];  
 $idTransaction = 1;  
@@ -12,37 +14,25 @@ function initStorage() {
 
 function saveWallet($walletData) {
     global $wallets;
-    $wallets[count($wallets)] = $walletData;
+    $wallets[] = $walletData;
     return true;
 }
 
 function findWalletIndexByTelephone($telephone) {
     global $wallets;
-    for ($i = 0; $i < count($wallets); $i++) {
-        if ($wallets[$i]['telephone'] === $telephone) {
-            return $i;
-        }
-    }
-    return -1;
+    $index = array_search($telephone, array_column($wallets, 'telephone'), true);
+    return $index === false ? -1 : $index;
 }
 
 function findWalletByTelephone($telephone) {
     global $wallets;
     $index = findWalletIndexByTelephone($telephone);
-    if ($index >= 0) {
-        return $wallets[$index];
-    }
-    return null;
+    return $index >= 0 ? $wallets[$index] : null;
 }
 
 function codeSecretExists($code) {
     global $wallets;
-    for ($i = 0; $i < count($wallets); $i++) {
-        if ($wallets[$i]['code'] === $code) {
-            return true;
-        }
-    }
-    return false;
+    return in_array($code, array_column($wallets, 'code'), true);
 }
 
 function updateSoldeWallet($telephone, $nouveauSolde) {
@@ -57,7 +47,7 @@ function updateSoldeWallet($telephone, $nouveauSolde) {
 
 function saveTransaction($type, $telephone, $montant, $frais = 0) {
     global $transactions, $idTransaction;
-    $transactions[count($transactions)] = [
+    $transactions[] = [
         'id' => $idTransaction,
         'type' => $type,
         'telephone' => $telephone,
@@ -65,7 +55,7 @@ function saveTransaction($type, $telephone, $montant, $frais = 0) {
         'frais' => $frais,
         'date' => date('Y-m-d H:i:s')
     ];
-    $idTransaction = $idTransaction + 1;
+    $idTransaction++;
 }
 
 function getAllTransactions($telephone = null) {
@@ -73,12 +63,5 @@ function getAllTransactions($telephone = null) {
     if ($telephone === null) {
         return $transactions;
     }
-    
-    $result = [];
-    for ($i = 0; $i < count($transactions); $i++) {
-        if ($transactions[$i]['telephone'] === $telephone) {
-            $result[count($result)] = $transactions[$i];
-        }
-    }
-    return $result;
+    return array_values(array_filter($transactions, fn($t) => $t['telephone'] === $telephone));
 }

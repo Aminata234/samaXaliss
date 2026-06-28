@@ -1,4 +1,11 @@
 <?php
+namespace App\Validator;
+
+use function App\Repository\findWalletIndexByTelephone;
+use function App\Repository\codeSecretExists;
+use function App\Repository\findWalletByTelephone;
+use function App\Service\calculerFraisRetrait;
+
 function validateCreerWallet($telephone, $nom, $solde, $code) {
     if ($telephone === '' || $nom === '' || $code === '') {
         return ['success' => false, 'message' => 'Telephone, nom et code sont obligatoires'];
@@ -21,7 +28,7 @@ function validateCreerWallet($telephone, $nom, $solde, $code) {
     }
     
     $prefixe = substr($telephone, 0, 2);
-    if ($prefixe !== '77' && $prefixe !== '78' && $prefixe !== '76' && $prefixe !== '70' && $prefixe !== '75') {
+    if (!in_array($prefixe, ['77', '78', '76', '70', '75'], true)) {
         return ['success' => false, 'message' => 'Le telephone doit commencer par 77, 78, 76, 70 ou 75'];
     }
 

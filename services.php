@@ -1,16 +1,20 @@
 <?php
+namespace App\Service;
+
+use function App\Validator\validateCreerWallet;
+use function App\Validator\validateDepot;
+use function App\Validator\validateRetrait;
+use function App\Repository\saveWallet;
+use function App\Repository\findWalletByTelephone;
+use function App\Repository\updateSoldeWallet;
+use function App\Repository\saveTransaction;
+
 function calculerFraisRetrait($montant) {
-    if ($montant <= 10000) {
-        return 200;
-    } elseif ($montant <= 100000) {
-        return 500;
-    } else {
-        $frais = $montant * 0.01;
-        if ($frais > 5000) {
-            return 5000;
-        }
-        return $frais;
-    }
+    return match(true) {
+        $montant <= 10000 => 200,
+        $montant <= 100000 => 500,
+        default => min($montant * 0.01, 5000)
+    };
 }
 
 function serviceCreerWallet($telephone, $nom, $solde, $code) {
