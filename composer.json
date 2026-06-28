@@ -1,12 +1,17 @@
-	
-name	"aminata-sy/samaxaliss"
-description	"E-Wallet PHP Procedural avec Namespaces"
-type	"project"
-autoload	
-files	
-0	"repository.php"
-1	"validator.php"
-2	"services.php"
-3	"controller.php"
-require	
-php	">=8.0"
+{
+"name":	"aminata-sy/samaxaliss",
+"description":	"E-Wallet PHP Procedural avec Namespaces",
+"type":	"project",
+"autoload":	{
+    "files": [	
+    	"repository.php",
+    	"validator.php",
+    	"services.php",
+    	"controller.php"
+    ]
+    },
+	"require":{	
+		"php":	">=8.0"
+	}
+
+}
